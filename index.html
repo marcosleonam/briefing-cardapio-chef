@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<style>:root{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>Briefing Cardápio Chef</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600&display=swap">
+<style>
+/* Layout: coluna única pensada para celular, seções numeradas porque o briefing é sequencial, barra de progresso fixa no topo */
+:root {
+  --bg: #F6F5F0;
+  --surface: #FFFFFF;
+  --ink: #1F1D18;
+  --muted: #6A665C;
+  --line: #E2DFD4;
+  --accent: #4A6A2E;
+  --accent-soft: #E7EEDC;
+  --gold: #C98F12;
+  --warn-bg: #FFF4DA;
+  --warn-ink: #7A5300;
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Figtree", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #161712; --surface: #1F211A; --ink: #ECEADF; --muted: #A4A193; --line: #33362A;
+    --accent: #9CC46E; --accent-soft: #2A3420; --gold: #E5B23C; --warn-bg: #3A2F12; --warn-ink: #F3D27E;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #161712; --surface: #1F211A; --ink: #ECEADF; --muted: #A4A193; --line: #33362A;
+  --accent: #9CC46E; --accent-soft: #2A3420; --gold: #E5B23C; --warn-bg: #3A2F12; --warn-ink: #F3D27E;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 16px/1.55 var(--font-body); }
+.progress { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); padding: 10px 16px; border-bottom: 1px solid var(--line); }
+.progress-inner { max-width: 640px; margin: 0 auto; display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.bar { flex: 1; height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; }
+.bar span { display: block; height: 100%; width: 0; background: var(--gold); transition: width .3s; }
+main { max-width: 640px; margin: 0 auto; padding-inline: 16px; padding-block: 28px 64px; display: grid; gap: 28px; }
+header h1 { font: 800 clamp(28px, 7vw, 40px)/1.08 var(--font-display); margin: 6px 0 12px; text-wrap: balance; letter-spacing: -0.01em; }
+.eyebrow { font-size: 12px; text-transform: uppercase; letter-spacing: .1em; color: var(--accent); font-weight: 600; }
+header p { margin: 0; color: var(--muted); max-width: 60ch; }
+section { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 22px 18px; display: grid; gap: 20px; }
+section h2 { margin: 0; font: 600 21px/1.2 var(--font-display); display: flex; gap: 10px; align-items: baseline; }
+section h2 .n { color: var(--gold); font-variant-numeric: tabular-nums; }
+.q { display: grid; gap: 8px; min-width: 0; }
+.q > label, .q > .label { font-weight: 600; }
+.hint { font-size: 14px; color: var(--muted); margin-top: -4px; }
+input[type=text], input[type=tel], textarea {
+  width: 100%; font: inherit; color: var(--ink); background: var(--bg);
+  border: 1px solid var(--line); border-radius: 10px; padding: 11px 12px;
+}
+textarea { min-height: 84px; resize: vertical; }
+input:focus-visible, textarea:focus-visible, button:focus-visible, a:focus-visible, .opt input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+.opts { display: flex; flex-wrap: wrap; gap: 8px; }
+.opt { position: relative; }
+.opt input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.opt span { display: inline-block; padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px; font-size: 15px; background: var(--bg); cursor: pointer; }
+.opt input:checked + span { background: var(--accent-soft); border-color: var(--accent); color: var(--ink); font-weight: 600; }
+.checklist { display: grid; gap: 6px; }
+.check { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 1px dashed var(--line); }
+.check:last-child { border-bottom: 0; }
+.check input { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--accent); flex: none; }
+.tips { margin: 0; padding-left: 18px; color: var(--muted); font-size: 15px; display: grid; gap: 4px; }
+.notice { background: var(--warn-bg); color: var(--warn-ink); border-radius: 10px; padding: 12px 14px; font-size: 15px; }
+.actions { display: grid; gap: 10px; }
+button, .btn {
+  font: 600 16px var(--font-body); border-radius: 12px; padding: 14px 18px; cursor: pointer;
+  border: 1px solid var(--accent); text-align: center; text-decoration: none;
+}
+.primary { background: var(--accent); color: var(--surface); }
+.ghost { background: transparent; color: var(--accent); }
+.err { color: #B3261E; font-size: 14px; }
+:root[data-theme="dark"] .err { color: #FF9A8F; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .err { color: #FF9A8F; } }
+#result pre { white-space: pre-wrap; word-break: break-word; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 14px; font: 14px/1.5 ui-monospace, Consolas, monospace; max-height: 340px; overflow: auto; margin: 0; }
+footer { text-align: center; color: var(--muted); font-size: 13px; }
+@media (prefers-reduced-motion: reduce) { .bar span { transition: none; } }
+</style>
+
+<div class="progress" aria-hidden="true"><div class="progress-inner"><div class="bar"><span id="bar"></span></div><span id="pct">0%</span></div></div>
+
+<main>
+  <header>
+    <div class="eyebrow">Esfiha e Pizza do Chef · Reestruturação do cardápio</div>
+    <h1>Briefing do novo cardápio</h1>
+    <p>Responda com calma, leva uns 10 minutos. Suas respostas ficam salvas neste celular até você enviar. No final, é só tocar em <strong>Enviar pelo WhatsApp</strong>.</p>
+  </header>
+
+  <form id="form" novalidate></form>
+
+  <section id="result" hidden>
+    <h2>Pronto! Agora envie 👇</h2>
+    <p class="hint" style="margin:0">Toque no botão verde, escolha a conversa com o Marcos e aperte enviar. Se não abrir, use o botão de copiar e cole no WhatsApp.</p>
+    <div class="actions">
+      <a id="wa" class="btn primary" href="#" target="_blank" rel="noopener">Enviar pelo WhatsApp</a>
+      <button type="button" class="ghost" id="copy">Copiar respostas</button>
+    </div>
+    <pre id="out"></pre>
+  </section>
+
+  <footer>Gestão: Marcos Leonam · Nenhum preço muda sem a sua aprovação.</footer>
+</main>
+
+<script>
+const YESNO = ["Sim", "Não", "Talvez"];
+const SECTIONS = [
+  { t: "Seus dados", q: [
+    { id: "nome", type: "text", label: "Seu nome", req: true },
+    { id: "zap", type: "tel", label: "Seu WhatsApp", req: true },
+  ]},
+  { t: "Operação", q: [
+    { id: "petiscos", type: "radio", label: "A cozinha consegue fazer itens novos? (batata frita, kibe, petiscos)", opts: YESNO, more: "Quais?" },
+    { id: "foraCardapio", type: "area", label: "Tem algum produto que você faz e não está no cardápio?" },
+    { id: "tirar", type: "area", label: "Tem item que dá prejuízo, dá muito trabalho ou quase ninguém pede?", hint: "A gente avalia tirar." },
+    { id: "top5", type: "area", label: "Quais são os 5 itens que MAIS vendem hoje?", req: true },
+  ]},
+  { t: "Esfihas", q: [
+    { id: "tamanho", type: "text", label: "Qual o tamanho da esfiha?", hint: "No app está 11 cm. Confere?" },
+    { id: "catupiry", type: "radio", label: "Qual requeijão você usa?", opts: ["Catupiry original", "Requeijão comum", "Outra marca"], more: "Qual marca?" },
+    { id: "marcas", type: "text", label: "Marcas da mussarela, do cheddar e da calabresa", hint: "Marca boa vira argumento de venda na descrição." },
+    { id: "massa", type: "radio", label: "A massa é feita na casa todo dia?", opts: ["Sim", "Não"] },
+    { id: "premium", type: "multi", label: "Linha Premium (de R$ 9 a R$ 13): quais você consegue fazer?", opts: ["Quatro queijos", "Costela com catupiry", "Carne de sol com catupiry e coalho", "Borda recheada (suprema)", "Camarão cremoso", "Nenhuma"], more: "Outra ideia?" },
+    { id: "doces", type: "multi", label: "Quais doces novos dá pra fazer?", opts: ["Nutella", "Nutella com morango", "Chocolate com morango", "Prestígio", "M&M", "Nenhum"], more: "Outro sabor?" },
+  ]},
+  { t: "Pizzas", q: [
+    { id: "borda", type: "radio", label: "Tem borda recheada?", opts: ["Sim", "Não", "Posso fazer"], more: "Sabores e preço da borda" },
+    { id: "sabores", type: "area", label: "Quais sabores são tradicionais e quais são especiais?" },
+  ]},
+  { t: "Combos", q: [
+    { id: "mega", type: "radio", label: "Topa criar um Mega Combo família?", hint: "Ex: 20 esfihas + pizza P + refri 2L, por volta de R$ 89,90", opts: ["Sim", "Não", "Quero ajustar"], more: "O que ajustaria?" },
+    { id: "salDoce", type: "radio", label: "Topa um Combo Sal & Doce? (3 especiais + 1 doce)", opts: YESNO },
+    { id: "margem", type: "text", label: "Qual a margem mínima que você aceita nos combos?", hint: "Ex: 30%" },
+  ]},
+  { t: "Preços", q: [
+    { id: "ajuste", type: "radio", label: "Posso sugerir ajuste de preço em alguns itens?", hint: "Te mando a lista pra aprovar antes de mexer.", opts: ["Pode sugerir", "Prefiro não mexer"] },
+    { id: "custoTrad", type: "text", label: "Custo aproximado da esfiha tradicional (R$)" },
+    { id: "custoEsp", type: "text", label: "Custo aproximado da esfiha especial (R$)" },
+  ]},
+  { t: "Marca", q: [
+    { id: "historia", type: "area", label: "Como começou a Esfiha do Chef?", hint: "Quem é o chef, há quanto tempo, alguma história." },
+    { id: "diferencial", type: "area", label: "Qual o diferencial de vocês em relação à concorrência?" },
+  ]},
+  { t: "Entrega", q: [
+    { id: "horario", type: "radio", label: "O horário de funcionamento no app está certo?", opts: ["Está certo", "Precisa corrigir"], more: "Horário correto" },
+    { id: "minimo", type: "radio", label: "Pedido mínimo de R$ 19,90 e entrega em 40 min a 1h: está certo?", opts: ["Está certo", "Precisa corrigir"], more: "Valores corretos" },
+    { id: "bairros", type: "radio", label: "Os bairros e as taxas de entrega estão atualizados?", opts: ["Sim", "Não"], more: "O que mudou?" },
+  ]},
+  { t: "Fotos", intro: true, q: [
+    { id: "fotos", type: "checks", label: "Marque o que você vai mandar no WhatsApp", opts: [
+      "Logo em alta qualidade (PNG, de preferência sem fundo)",
+      "Fachada ou cozinha (pra capa)",
+      "Esfihas tradicionais, 1 foto por sabor (8 fotos)",
+      "Esfihas especiais, 1 foto por sabor (9 fotos)",
+      "Esfihas doces (4 fotos ou mais)",
+      "Esfihas premium novas (se for fazer)",
+      "Pizza P e G inteiras + 1 fatia puxando o queijo",
+      "Cada combo montado (esfihas + refri juntos)",
+      "Molhos nos potinhos",
+      "Caixa ou embalagem de entrega",
+      "Vídeo curto do forno ou da montagem (opcional)",
+    ]},
+  ]},
+  { t: "Acessos", q: [
+    { id: "painel", type: "radio", label: "Acesso ao painel da Brendi", opts: ["Já te cadastrei como colaborador", "Vou cadastrar", "Não achei a opção, vou mandar o login separado"], warn: "Não escreva senha aqui. Se precisar mandar login e senha, mande numa mensagem separada no WhatsApp e troque a senha depois." },
+    { id: "relatorio", type: "radio", label: "Relatório de vendas dos últimos 30 a 60 dias", hint: "Itens mais vendidos e ticket médio. Pode ser print.", opts: ["Vou mandar print", "Não sei onde fica"] },
+    { id: "insta", type: "radio", label: "Quer que eu atualize o link da bio e os destaques do Instagram?", opts: ["Sim", "Não"] },
+  ]},
+];
+
+const KEY = "briefing-chef-v1";
+const form = document.getElementById("form");
+const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+function field(q) {
+  const hint = q.hint ? `<div class="hint">${esc(q.hint)}</div>` : "";
+  const warn = q.warn ? `<div class="notice">${esc(q.warn)}</div>` : "";
+  const more = q.more ? `<input type="text" id="${q.id}_more" name="${q.id}_more" placeholder="${esc(q.more)}" aria-label="${esc(q.more)}">` : "";
+  const req = q.req ? " *" : "";
+  if (q.type === "text" || q.type === "tel")
+    return `<div class="q"><label for="${q.id}">${esc(q.label)}${req}</label>${hint}<input type="${q.type}" id="${q.id}" name="${q.id}"></div>`;
+  if (q.type === "area")
+    return `<div class="q"><label for="${q.id}">${esc(q.label)}${req}</label>${hint}<textarea id="${q.id}" name="${q.id}"></textarea></div>`;
+  if (q.type === "checks")
+    return `<div class="q"><div class="label">${esc(q.label)}</div><div class="checklist">${q.opts.map((o, i) =>
+      `<label class="check"><input type="checkbox" id="${q.id}_${i}" name="${q.id}" value="${esc(o)}"><span>${esc(o)}</span></label>`).join("")}</div></div>`;
+  const kind = q.type === "multi" ? "checkbox" : "radio";
+  return `<div class="q" role="group" aria-label="${esc(q.label)}"><div class="label">${esc(q.label)}</div>${hint}<div class="opts">${q.opts.map((o, i) =>
+    `<label class="opt"><input type="${kind}" id="${q.id}_${i}" name="${q.id}" value="${esc(o)}"><span>${esc(o)}</span></label>`).join("")}</div>${more}${warn}</div>`;
+}
+
+const PHOTO_TIPS = `<ul class="tips">
+<li>Celular na horizontal ou quadrado, câmera traseira</li>
+<li>Luz natural (perto da janela, de dia) ou luz branca forte</li>
+<li>Fundo limpo: mesa de madeira, tábua ou papel kraft</li>
+<li>Produto saindo do forno; esfiha aberta ou mordida pra mostrar o recheio</li>
+<li>Sem filtro, sem plástico, sem fundo bagunçado</li>
+<li><strong>Mande pelo WhatsApp como DOCUMENTO</strong>, assim não perde qualidade</li></ul>`;
+
+form.innerHTML = SECTIONS.map((s, i) => `<section><h2><span class="n">${String(i + 1).padStart(2, "0")}</span>${esc(s.t)}</h2>${s.intro ? PHOTO_TIPS : ""}${s.q.map(field).join("")}</section>`).join("")
+  + `<div class="actions" style="margin-top:28px"><p id="err" class="err" hidden></p><button type="submit" class="primary">Gerar respostas</button></div>`;
+
+function val(q) {
+  if (["text", "tel", "area"].includes(q.type)) return form.elements[q.id].value.trim();
+  const picked = [...form.querySelectorAll(`input[name="${q.id}"]:checked`)].map(e => e.value);
+  const more = q.more ? form.elements[q.id + "_more"].value.trim() : "";
+  return [picked.join(", "), more].filter(Boolean).join(" | ");
+}
+
+function save() {
+  const data = {};
+  for (const el of form.elements) {
+    if (!el.id) continue;
+    data[el.id] = el.type === "checkbox" || el.type === "radio" ? el.checked : el.value;
+  }
+  try { localStorage.setItem(KEY, JSON.stringify(data)); } catch (e) {}
+  progress();
+}
+function load() {
+  let data = null;
+  try { data = JSON.parse(localStorage.getItem(KEY) || "null"); } catch (e) {}
+  if (!data) return;
+  for (const el of form.elements) {
+    if (!(el.id in data)) continue;
+    if (el.type === "checkbox" || el.type === "radio") el.checked = data[el.id]; else el.value = data[el.id];
+  }
+}
+function progress() {
+  const all = SECTIONS.flatMap(s => s.q);
+  const done = all.filter(q => val(q)).length;
+  const p = Math.round(done / all.length * 100);
+  document.getElementById("bar").style.width = p + "%";
+  document.getElementById("pct").textContent = p + "%";
+}
+
+form.addEventListener("input", save);
+form.addEventListener("change", save);
+form.addEventListener("submit", e => {
+  e.preventDefault();
+  const missing = SECTIONS.flatMap(s => s.q).filter(q => q.req && !val(q));
+  const err = document.getElementById("err");
+  if (missing.length) {
+    err.textContent = "Falta preencher: " + missing.map(q => q.label).join(", ") + ".";
+    err.hidden = false;
+    document.getElementById(missing[0].id).focus();
+    return;
+  }
+  err.hidden = true;
+  const lines = ["*BRIEFING CARDÁPIO · ESFIHA E PIZZA DO CHEF*", ""];
+  SECTIONS.forEach((s, i) => {
+    lines.push(`*${i + 1}. ${s.t.toUpperCase()}*`);
+    s.q.forEach(q => {
+      const v = val(q);
+      if (q.type === "checks") lines.push(v ? v.split(", ").map(x => "✅ " + x).join("\n") : "(nenhuma marcada)");
+      else lines.push(`• ${q.label}\n   ${v || "—"}`);
+    });
+    lines.push("");
+  });
+  const text = lines.join("\n").trim();
+  document.getElementById("out").textContent = text;
+  document.getElementById("wa").href = "https://wa.me/?text=" + encodeURIComponent(text);
+  const r = document.getElementById("result");
+  r.hidden = false;
+  r.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+});
+
+document.getElementById("copy").addEventListener("click", async e => {
+  const text = document.getElementById("out").textContent;
+  try { await navigator.clipboard.writeText(text); e.target.textContent = "Copiado ✓"; }
+  catch (_) {
+    const range = document.createRange(); range.selectNodeContents(document.getElementById("out"));
+    const sel = getSelection(); sel.removeAllRanges(); sel.addRange(range);
+    e.target.textContent = "Texto selecionado, copie manualmente";
+  }
+});
+
+load();
+progress();
+</script>
+
+</body>
+</html>
